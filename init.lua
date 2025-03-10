@@ -168,7 +168,6 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-vim.diagnostic.open_float()
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -620,6 +619,9 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        -- intelephense = {
+        --   format_on_save = true,
+        -- },
 
         lua_ls = {
           -- cmd = {...},
@@ -973,6 +975,24 @@ require('lazy').setup({
       require('lsp_signature').setup(opts)
     end,
   },
+  {
+    'adalessa/laravel.nvim',
+    dependencies = {
+      'tpope/vim-dotenv',
+      'nvim-telescope/telescope.nvim',
+      'MunifTanjim/nui.nvim',
+      'kevinhwang91/promise-async',
+    },
+    cmd = { 'Laravel' },
+    keys = {
+      { '<leader>la', ':Laravel artisan<cr>' },
+      { '<leader>lr', ':Laravel routes<cr>' },
+      { '<leader>lm', ':Laravel related<cr>' },
+    },
+    event = { 'VeryLazy' },
+    opts = {},
+    config = true,
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -997,11 +1017,11 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-local format_sync_grp = vim.api.nvim_create_augroup('goimports', {})
-vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = '*.go',
-  callback = function()
-    require('go.format').goimports()
-  end,
-  group = format_sync_grp,
-})
+--local format_sync_grp = vim.api.nvim_create_augroup('goimports', {})
+--vim.api.nvim_create_autocmd('BufWritePre', {
+--  pattern = '*.go',
+--  callback = function()
+--    require('go.format').goimports()
+--  end,
+--  group = format_sync_grp,
+--})
