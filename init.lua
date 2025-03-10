@@ -218,6 +218,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+vim.opt.termguicolors = true
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -993,6 +994,7 @@ require('lazy').setup({
     opts = {},
     config = true,
   },
+  { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -1014,6 +1016,8 @@ require('lazy').setup({
     },
   },
 })
+
+require('bufferline').setup {}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
