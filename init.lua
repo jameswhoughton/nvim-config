@@ -691,7 +691,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, go = true }
         local lsp_format_opt
         if disable_filetypes[vim.bo[bufnr].filetype] then
           lsp_format_opt = 'never'
@@ -721,6 +721,7 @@ require('lazy').setup({
       -- Snippet Engine & its associated nvim-cmp source
       {
         'L3MON4D3/LuaSnip',
+        version = 'v2.*',
         build = (function()
           -- Build Step is needed for regex support in snippets.
           -- This step is not supported in many windows environments.
@@ -922,6 +923,14 @@ require('lazy').setup({
     },
     config = function()
       require('go').setup()
+      local format_sync_grp = vim.api.nvim_create_augroup('goimports', {})
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        pattern = '*.go',
+        callback = function()
+          require('go.format').goimports()
+        end,
+        group = format_sync_grp,
+      })
     end,
     event = { 'CmdlineEnter' },
     ft = { 'go', 'gomod' },
@@ -1021,11 +1030,3 @@ require('bufferline').setup {}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
---local format_sync_grp = vim.api.nvim_create_augroup('goimports', {})
---vim.api.nvim_create_autocmd('BufWritePre', {
---  pattern = '*.go',
---  callback = function()
---    require('go.format').goimports()
---  end,
---  group = format_sync_grp,
---})
