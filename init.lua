@@ -615,7 +615,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
+        vtsls = {},
         --
         intelephense = {
           format_on_save = true,
@@ -913,28 +913,6 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-  {
-    'ray-x/go.nvim',
-    dependencies = { -- optional packages
-      'ray-x/guihua.lua',
-      'neovim/nvim-lspconfig',
-      'nvim-treesitter/nvim-treesitter',
-    },
-    config = function()
-      require('go').setup()
-      local format_sync_grp = vim.api.nvim_create_augroup('goimports', {})
-      vim.api.nvim_create_autocmd('BufWritePre', {
-        pattern = '*.go',
-        callback = function()
-          require('go.format').goimports()
-        end,
-        group = format_sync_grp,
-      })
-    end,
-    event = { 'CmdlineEnter' },
-    ft = { 'go', 'gomod' },
-    build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
-  },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -956,131 +934,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
-  {
-    'numToStr/Comment.nvim',
-    opts = {
-      -- add any options here
-    },
-  },
-  {
-    'ray-x/lsp_signature.nvim',
-    event = 'VeryLazy',
-    opts = {},
-    config = function(_, opts)
-      require('lsp_signature').setup(opts)
-    end,
-  },
-  {
-    'adalessa/laravel.nvim',
-    dependencies = {
-      'tpope/vim-dotenv',
-      'nvim-telescope/telescope.nvim',
-      'MunifTanjim/nui.nvim',
-      'kevinhwang91/promise-async',
-    },
-    cmd = { 'Laravel' },
-    keys = {
-      { '<leader>la', ':Laravel artisan<cr>' },
-      { '<leader>lr', ':Laravel routes<cr>' },
-      { '<leader>lm', ':Laravel related<cr>' },
-    },
-    event = { 'VeryLazy' },
-    opts = {},
-    config = true,
-  },
-  { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
-  {
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {},
-  },
-  {
-    'folke/flash.nvim',
-    event = 'VeryLazy',
-    ---@type Flash.Config
-    opts = {},
-    -- stylua: ignore
-    keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-    },
-  },
-  {
-    'kylechui/nvim-surround',
-    version = '^3.0.0', -- Use for stability; omit to use `main` branch for the latest features
-    event = 'VeryLazy',
-    config = function()
-      require('nvim-surround').setup {
-        -- Configuration here, or leave empty to use defaults
-      }
-    end,
-  },
-  ---@type LazySpec
-  {
-    'mikavilpas/yazi.nvim',
-    event = 'VeryLazy',
-    dependencies = {
-      { 'nvim-lua/plenary.nvim', lazy = true },
-    },
-    keys = {
-      -- 👇 in this section, choose your own keymappings!
-      {
-        '<leader>-',
-        mode = { 'n', 'v' },
-        '<cmd>Yazi<cr>',
-        desc = 'Open yazi at the current file',
-      },
-      {
-        -- Open in the current working directory
-        '<leader>cw',
-        '<cmd>Yazi cwd<cr>',
-        desc = "Open the file manager in nvim's working directory",
-      },
-      {
-        '<c-up>',
-        '<cmd>Yazi toggle<cr>',
-        desc = 'Resume the last yazi session',
-      },
-    },
-    ---@type YaziConfig | {}
-    opts = {
-      -- if you want to open yazi instead of netrw, see below for more info
-      open_for_directories = false,
-      keymaps = {
-        show_help = '<f1>',
-      },
-    },
-    -- 👇 if you use `open_for_directories=true`, this is recommended
-    init = function()
-      -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
-      -- vim.g.loaded_netrw = 1
-      vim.g.loaded_netrwPlugin = 1
-    end,
-  },
-  {
-    'kdheepak/lazygit.nvim',
-    lazy = true,
-    cmd = {
-      'LazyGit',
-      'LazyGitConfig',
-      'LazyGitCurrentFile',
-      'LazyGitFilter',
-      'LazyGitFilterCurrentFile',
-    },
-    -- optional for floating window border decoration
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-    },
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
-    -- order to load the plugin when the command is run for the first time
-    keys = {
-      { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
-    },
-  },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -1104,6 +958,66 @@ require('lazy').setup({
 })
 
 require('bufferline').setup {}
+
+-- If you are using mason.nvim, you can get the ts_plugin_path like this
+-- For Mason v1,
+-- local mason_registry = require('mason-registry')
+-- local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
+-- For Mason v2,
+local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
+-- or even
+-- local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+-- local vue_language_server_path = '/path/to/@vue/language-server'
+local vue_plugin = {
+  name = '@vue/typescript-plugin',
+  location = vue_language_server_path,
+  languages = { 'vue' },
+  configNamespace = 'typescript',
+}
+local vtsls_config = {
+  settings = {
+    vtsls = {
+      tsserver = {
+        globalPlugins = {
+          vue_plugin,
+        },
+      },
+    },
+  },
+  filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+}
+
+local vue_ls_config = {
+  on_init = function(client)
+    client.handlers['tsserver/request'] = function(_, result, context)
+      local clients = vim.lsp.get_clients { bufnr = context.bufnr, name = 'vtsls' }
+      if #clients == 0 then
+        vim.notify('Could not find `vtsls` lsp client, `vue_ls` would not work without it.', vim.log.levels.ERROR)
+        return
+      end
+      local ts_client = clients[1]
+
+      local param = unpack(result)
+      local id, command, payload = unpack(param)
+      ts_client:exec_cmd({
+        title = 'vue_request_forward', -- You can give title anything as it's used to represent a command in the UI, `:h Client:exec_cmd`
+        command = 'typescript.tsserverRequest',
+        arguments = {
+          command,
+          payload,
+        },
+      }, { bufnr = context.bufnr }, function(_, r)
+        local response_data = { { id, r.body } }
+        ---@diagnostic disable-next-line: param-type-mismatch
+        client:notify('tsserver/response', response_data)
+      end)
+    end
+  end,
+}
+-- nvim 0.11 or above
+vim.lsp.config('vtsls', vtsls_config)
+vim.lsp.config('vue_ls', vue_ls_config)
+vim.lsp.enable { 'vtsls', 'vue_ls' }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
