@@ -616,6 +616,13 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         vtsls = {},
+        vue_ls = {
+          init_options = {
+            typescript = {
+              tsdk = '',
+            },
+          },
+        },
         --
         intelephense = {
           format_on_save = true,
@@ -663,6 +670,10 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+        },
+        opts = {
+          automatic_enable = { exclude = { 'vue_ls' } },
+          vim.lsp.enable { 'vue_ls' },
         },
       }
     end,
@@ -1013,6 +1024,12 @@ local vue_ls_config = {
       end)
     end
   end,
+  init_options = {
+    typescript = {
+      serverPath = '',
+      tsdk = '',
+    },
+  },
 }
 -- nvim 0.11 or above
 vim.lsp.config('vtsls', vtsls_config)
