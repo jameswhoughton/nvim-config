@@ -624,9 +624,7 @@ require('lazy').setup({
           },
         },
         --
-        intelephense = {
-          format_on_save = true,
-        },
+        intelephense = {},
 
         lua_ls = {
           -- cmd = {...},
