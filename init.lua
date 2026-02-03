@@ -1047,5 +1047,18 @@ vim.lsp.config('vtsls', vtsls_config)
 vim.lsp.config('vue_ls', vue_ls_config)
 vim.lsp.enable { 'vtsls', 'vue_ls' }
 
+require('Comment').setup()
+
+require('gitsigns').setup {
+  on_attach = function(bufnr)
+    local gitsigns = require 'gitsigns'
+    local map = function(keys, func, desc, mode)
+      mode = mode or 'n'
+      vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
+    end
+
+    map('<leader>tb', gitsigns.toggle_current_line_blame, '[T]oggle [B]lame')
+  end,
+}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
