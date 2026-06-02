@@ -155,6 +155,11 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
 
 -- vim.opt.tabstop = 4
 -- [[ Basic Keymaps ]]
@@ -204,11 +209,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-vim.filetype.add({
+vim.filetype.add {
   pattern = {
-    [".*%.gotmpl"] = "gotmpl",
+    ['.*%.gotmpl'] = 'gotmpl',
   },
-})
+}
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -244,12 +249,6 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
-  opts = {
-    rocks = {
-      enabled = false,
-    },
-  },
-
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
@@ -283,7 +282,7 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -326,7 +325,7 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>c', group = '[C]ode',     mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
@@ -365,7 +364,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -461,7 +460,7 @@ require('lazy').setup({
       },
     },
   },
-  { 'Bilal2453/luvit-meta', lazy = true },
+  { 'Bilal2453/luvit-meta',     lazy = true },
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
@@ -914,56 +913,36 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-  {
-    'nvim-treesitter/nvim-treesitter',
-    branch = 'main',
-    build = ':TSUpdate',
+{
+  'nvim-treesitter/nvim-treesitter',
+  branch = 'main',
+  build = ':TSUpdate',
 
-    config = function()
-      require('nvim-treesitter').install {
-        'bash',
-        'c',
-        'diff',
-        'html',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'query',
-        'vim',
-        'vimdoc',
-        'terraform',
-        'hcl',
-        'php',
-        'javascript',
-        'go',
-        'gomod',
-        'gowork',
-        'gosum',
-        'gotmpl',
-        'sql',
-        'comment',
-        'json',
-        'blade',
-        'css',
-      }
+  event = { 'BufReadPost', 'BufNewFile' },
 
-      -- Enable treesitter highlighting for supported buffers
-      vim.api.nvim_create_autocmd('FileType', {
-        callback = function(ev)
-          pcall(vim.treesitter.start, ev.buf)
-        end,
-      })
+  config = function()
+    local ok, ts = pcall(require, 'nvim-treesitter.configs')
+    if not ok then
+      vim.notify(
+        'nvim-treesitter failed to load. Check Lazy install status.',
+        vim.log.levels.ERROR
+      )
+      return
+    end
 
-      -- Keep regex syntax highlighting for ruby
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'ruby',
-        callback = function()
-          vim.cmd.syntax 'enable'
-        end,
-      })
-    end,
-  },
+    ts.setup {
+      ensure_installed = {
+        'bash', 'c', 'diff', 'html', 'lua',
+        'markdown', 'vim', 'vimdoc',
+        'json', 'css', 'javascript',
+        'php', 'go', 'sql', 'terraform', 'blade',
+      },
+
+      highlight = { enable = true },
+      indent = { enable = true },
+    }
+  end,
+},
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -1006,6 +985,9 @@ require('lazy').setup({
       lazy = '💤 ',
     },
   },
+  rocks = {
+    enabled = false
+  }
 })
 
 -- If you are using mason.nvim, you can get the ts_plugin_path like this
@@ -1013,7 +995,8 @@ require('lazy').setup({
 -- local mason_registry = require('mason-registry')
 -- local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
 -- For Mason v2,
-local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
+local vue_language_server_path = vim.fn.expand '$MASON/packages' ..
+'/vue-language-server' .. '/node_modules/@vue/language-server'
 -- or even
 -- local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
 -- local vue_language_server_path = '/path/to/@vue/language-server'
@@ -1105,5 +1088,4 @@ vim.lsp.config('intelephense', {
   },
 })
 
-vim.lsp.enable('intelephense')
-
+vim.lsp.enable 'intelephense'
