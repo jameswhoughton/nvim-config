@@ -938,6 +938,7 @@ require('lazy').setup({
         'go',
         'sql',
         'terraform',
+        'nix',
       }
 
       vim.api.nvim_create_autocmd('FileType', {
@@ -1068,7 +1069,7 @@ local vue_ls_config = {
 -- nvim 0.11 or above
 vim.lsp.config('vtsls', vtsls_config)
 vim.lsp.config('vue_ls', vue_ls_config)
-vim.lsp.enable { 'vtsls', 'vue_ls' }
+vim.lsp.enable { 'vtsls', 'vue_ls', 'nixd' }
 
 require('Comment').setup()
 
